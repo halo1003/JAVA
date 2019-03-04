@@ -28,7 +28,7 @@ node {
             }   
 
             stage ('AutoTag'){
-                STATUS = executionTask()                
+                sh './script.sh'
             }
 
             stage('Report'){

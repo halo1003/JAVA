@@ -1,44 +1,37 @@
-#get highest tags across all branches, not just the current branch
+#get highest tags
 VERSION=`git describe --tags $(git rev-list --tags --max-count=1)`
 
 if [ $? -eq 0 ]
-then
-    echo "it worked"
+then    
+    echo "Latest version tag: $VERSION"
 else
-    echo "it failed"
-    VERSION='1.0'
+    VERSION='0.9'
+    echo "No lastest version tag found => initial: $VERSION"    
 fi
-
-echo "Latest version tag: $VERSION"
 
 remainder="$VERSION"
 VNUM1="${remainder%%.*}"; remainder="${remainder#*.}"
 VNUM2="${remainder%%.*}"; remainder="${remainder#*.}"
 
-COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR=`git log -1 --pretty=%B | egrep -c '\+semver:\s?(breaking|major)'`
-COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR=`git log -1 --pretty=%B | egrep -c '\+semver:\s?(feature|minor)'`
-
-if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR -gt 0 ]; then
-    VNUM1=$((VNUM1+1)) 
-fi
-if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR -gt 0 ]; then
-    VNUM2=$((VNUM2+1)) 
-fi
-
 # count all commits for a branch
-GIT_COMMIT_COUNT=`git rev-list --count HEAD`
-echo "Commit count: $GIT_COMMIT_COUNT" 
-export BUILD_NUMBER=$GIT_COMMIT_COUNT
-
-#create new tag
-NEW_TAG="$VNUM1.$VNUM2"
-
-echo "Updating $VERSION to $NEW_TAG"
+GIT_COMMIT=`git rev-parse HEAD`
+NEEDS_TAG=`git describe --contains $GIT_COMMIT`
 
 #only tag if commit message have version-bump-message as mentioned above
-if [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MAJOR -gt 0 ] ||  [ $COUNT_OF_COMMIT_MSG_HAVE_SEMVER_MINOR -gt 0 ]; then
+if [ -z "$NEEDS_TAG" ]; then    
+    VNUM2=$((VNUM2+1))     
+    if [ $VNUM2 -gt 9 ]; then        
+        VNUM2='0'
+        VNUM1=$((VNUM1+1)) 
+    fi
+    #create new tag
+    NEW_TAG="$VNUM1.$VNUM2"
     echo "Tagged with $NEW_TAG (Ignoring fatal:cannot describe - this means commit is untagged) "
-    git tag "$NEW_TAG"
+    git tag $NEW_TAG
+    git config --global user.name "halo1003"
+    git config --global user.email do.toan95@gmail.com
+    git config credential.helper store
+    git push --tag
 else
     echo "Already a tag on this commit"
 fi

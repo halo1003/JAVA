@@ -25,6 +25,7 @@ public class EmployeeController {
 	// Get all EMPLOYEE in database
 	@RequestMapping(value = "/employee", method = RequestMethod.GET, produces = "application/json")
 	public List<Employee> getListEmployee() {
+		System.out.print("Helloworld");
 		return empService.getListEmployee();
 	}
 
