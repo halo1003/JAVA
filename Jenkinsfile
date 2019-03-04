@@ -5,27 +5,27 @@ node {
                 FAILED_STAGE=env.STAGE_NAME  
                 checkout scm
             }
-            // stage('Check environment'){    
-            //     FAILED_STAGE=env.STAGE_NAME        
-            //     sh "mvn -v"
-            //     sh "java -version"
-            // }
-            // stage ('Test'){            
-            //     FAILED_STAGE=env.STAGE_NAME
-            //     sh "mvn test"            
-            // }    
-            // stage ('Package'){
-            //     FAILED_STAGE=env.STAGE_NAME
-            //     sh "mvn package"
-            // }    
-            // stage ('Report'){
-            //     FAILED_STAGE=env.STAGE_NAME
-            //     step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
-            // }    
-            // stage ('Artifact'){
-            //     FAILED_STAGE=env.STAGE_NAME
-            //     step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
-            // }   
+            stage('Check environment'){    
+                FAILED_STAGE=env.STAGE_NAME        
+                sh "mvn -v"
+                sh "java -version"
+            }
+            stage ('Test'){            
+                FAILED_STAGE=env.STAGE_NAME
+                sh "mvn test"            
+            }    
+            stage ('Package'){
+                FAILED_STAGE=env.STAGE_NAME
+                sh "mvn package"
+            }    
+            stage ('Report'){
+                FAILED_STAGE=env.STAGE_NAME
+                step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
+            }    
+            stage ('Artifact'){
+                FAILED_STAGE=env.STAGE_NAME
+                step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
+            }   
 
             stage ('AutoTag'){
                 STATUS = executionTask()                
