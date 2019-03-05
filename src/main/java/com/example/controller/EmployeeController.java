@@ -17,7 +17,7 @@ import com.example.service.EmployeeService;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api"
 public class EmployeeController {
 	@Autowired
 	private EmployeeService empService;

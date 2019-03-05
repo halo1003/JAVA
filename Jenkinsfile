@@ -26,11 +26,10 @@ node {
                 FAILED_STAGE=env.STAGE_NAME
                 step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
             }   
-
             stage ('AutoTag'){
-                sh './script.sh'
+                FAILED_STAGE=env.STAGE_NAME
+                sh "./script.sh"
             }
-
             stage('Report'){
                 FAILED_STAGE=env.STAGE_NAME
                 sh "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"JenkinsPipeline execution successfully at ${getDateTime()}!!\"}' https://hooks.slack.com/services/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"                
@@ -51,7 +50,7 @@ def getDateTime(){
 return DATE
 }
 
-def executionTask(){
+def executeTask(){
     STATUS = sh (
         script: './script.sh',
         returnStdout: true

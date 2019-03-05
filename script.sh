@@ -28,9 +28,7 @@ if [ -z "$NEEDS_TAG" ]; then
     NEW_TAG="$VNUM1.$VNUM2"
     echo "Tagged with $NEW_TAG (Ignoring fatal:cannot describe - this means commit is untagged) "
     git tag $NEW_TAG
-    git config --global user.name "halo1003"
-    git config --global user.email do.toan95@gmail.com
-    git config credential.helper store
+    git remote set-url origin https://halo1003:Wtq15104@github.com/halo1003/JAVA.git
     git push --tag
 else
     echo "Already a tag on this commit"
