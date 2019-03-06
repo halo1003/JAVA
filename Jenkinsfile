@@ -30,6 +30,13 @@ node {
                 FAILED_STAGE=env.STAGE_NAME
                 sh "./script.sh"
             }
+            ansiColor('xterm') {
+                ansiblePlaybook(
+                    playbook: './ansible.yml',
+                    inventory: './hosts',
+                    credentialsId: 'xxx',
+                    colorized: true)
+            }
             stage('Report'){
                 FAILED_STAGE=env.STAGE_NAME
                 sh "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"JenkinsPipeline execution successfully at ${getDateTime()}!!\"}' https://hooks.slack.com/services/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"                
