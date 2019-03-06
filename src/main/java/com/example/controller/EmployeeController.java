@@ -17,15 +17,14 @@ import com.example.service.EmployeeService;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api"
+@RequestMapping("/api")
 public class EmployeeController {
 	@Autowired
 	private EmployeeService empService;
 
 	// Get all EMPLOYEE in database
 	@RequestMapping(value = "/employee", method = RequestMethod.GET, produces = "application/json")
-	public List<Employee> getListEmployee() {
-		System.out.print("Helloworld");
+	public List<Employee> getListEmployee() {		
 		return empService.getListEmployee();
 	}
 
