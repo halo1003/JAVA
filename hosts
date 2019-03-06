@@ -1,0 +1,3 @@
+[api]
+192.168.56.101 ansible_ssh_user=toan  ansible_ssh_pass=Wtq15104
+
