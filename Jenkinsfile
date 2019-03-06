@@ -30,6 +30,11 @@ node {
                 FAILED_STAGE=env.STAGE_NAME
                 sh "./script.sh"
             }
+
+            stage('Deploy'){                
+                sh "cd /usr/bin/ansible-playbook && ansible-playbook ./ansible.yml -i /etc/ansible/hosts "
+            }
+
             stage('Report'){
                 FAILED_STAGE=env.STAGE_NAME
                 sh "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"JenkinsPipeline execution successfully at ${getDateTime()}!!\"}' https://hooks.slack.com/services/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"                
