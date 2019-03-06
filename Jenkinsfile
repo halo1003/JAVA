@@ -1,6 +1,6 @@
 node {    
     try{
-        docker.image('maven').inside{
+        // docker.image('maven:3-jdk-8-alpine').inside{
             stage('Clone sources'){          
                 FAILED_STAGE=env.STAGE_NAME  
                 checkout scm
@@ -26,15 +26,19 @@ node {
                 FAILED_STAGE=env.STAGE_NAME
                 step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
             }   
+            
             stage ('AutoTag'){
                 FAILED_STAGE=env.STAGE_NAME
                 sh "./script.sh"
-            }
+            }            
             stage('Report'){
                 FAILED_STAGE=env.STAGE_NAME
                 sh "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"JenkinsPipeline execution successfully at ${getDateTime()}!!\"}' https://hooks.slack.com/services/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"                
             }     
-        }   
+        // }   
+        stage('Deploy'){                
+                sh "ansible-playbook -i hosts ansible.yml"
+            }
     }catch(exc){
         sh "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"JenkinsPipeline execution failed, at ${getDateTime()}, at Stage: ${FAILED_STAGE} because of ${exc} !!\"}' https://hooks.slack.com/services/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"
     }
