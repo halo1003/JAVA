@@ -1,24 +1,23 @@
 node {    
     try{
-        docker.image('maven').inside("-v /home/toands/.jenkins/workspace/JavaPipeline/?/.m2:/root/.m2"){
-            stage('Clone sources'){          
-                FAILED_STAGE=env.STAGE_NAME  
+        // docker.image('maven').inside("--net mynet --ip 172.18.0.23 -v /home/toands/.jenkins/workspace/JavaPipeline/?/.m2:/root/.m2"){
+            stage('Clone sources'){
+                FAILED_STAGE=env.STAGE_NAME
                 checkout scm
             }
-            stage('Check environment'){    
-                FAILED_STAGE=env.STAGE_NAME        
+            stage('Check environment'){
+                FAILED_STAGE=env.STAGE_NAME
                 sh "mvn -v"
                 sh "java -version"
-                sh "mvn clean install"
             }
-            stage ('Test'){            
-                FAILED_STAGE=env.STAGE_NAME                                
-                sh "mvn clean test"            
-            }    
+            stage ('Test'){
+                FAILED_STAGE=env.STAGE_NAME
+                sh "mvn clean test"    
+            }
             stage ('Package'){
                 FAILED_STAGE=env.STAGE_NAME
                 sh "mvn clean package"
-            }    
+            }
             stage ('Report'){
                 FAILED_STAGE=env.STAGE_NAME
                 step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
@@ -27,7 +26,6 @@ node {
                 FAILED_STAGE=env.STAGE_NAME
                 step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
             }   
-            
             stage ('AutoTag'){
                 FAILED_STAGE=env.STAGE_NAME
                 sh "./script.sh"
@@ -36,7 +34,7 @@ node {
                 FAILED_STAGE=env.STAGE_NAME
                 sh "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"JenkinsPipeline execution successfully at ${getDateTime()}!!\"}' https://hooks.slack.com/services/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"                
             }     
-        }   
+        // }   
         stage('Deploy'){                
                 sh "ansible-playbook -i hosts ansible.yml"
             }
