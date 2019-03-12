@@ -1,31 +1,19 @@
 ---
-- hosts: all
-  vars:
-    image: openjdk
-    container_name: java_container
+- hosts: api
+  
   tasks:
+  - name : Copy file to remote hosts - dockerfile
+    copy:
+      src: ./archive/dockerfile
+      dest: /home/toan/workspace/dockerfile
 
-  - name: Make the base image available locally
-    docker_image:
-        name: '{{image}}'
-
-  - name: Create file if it not exist 
-    file:
-      path: ~/workspace
-      state: directory
-      mode: 0755
-
-  - name: Create the container
-    docker_container:
-        image: '{{image}}'
-        name: '{{container_name}}'
-        state: started        
-        ports:
-         - "8080:9000"
-        volumes:
-         - "~/workspace:/home/toan/workspace"
-
-  - name : copy file to remote hosts
+  - name : Copy file to remote hosts
     copy:
       src: ./target/demojenkins-0.0.1-SNAPSHOT.jar
       dest: /home/toan/workspace/demojenkins-0.0.1-SNAPSHOT.jar
+
+  - name : Create image
+    shell: 'docker build -t artifact_img /home/toan/workspace'
+
+  # - name: Create container
+  #   shell: 'docker run -it --name artifact_conta artifact_img:latest'
