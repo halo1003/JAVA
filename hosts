@@ -1,3 +1,2 @@
 [api]
-192.168.56.102 ansible_ssh_user=toan  ansible_ssh_pass=Wtq15104
-
+192.168.56.102 ansible_ssh_user=toan  ansible_ssh_private_key_file=/root/.ssh/id_rsa
