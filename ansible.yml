@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: api
   vars:
     image: openjdk
     container_name: java_container
