@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: api
   vars:
     image: openjdk
     container_name: java_container
@@ -15,17 +15,20 @@
       state: directory
       mode: 0755
 
+  - name : Copy file to remote hosts
+    copy:
+      src: ./target/demojenkins-0.0.1-SNAPSHOT.jar
+      dest: /home/toan/workspace/demojenkins-0.0.1-SNAPSHOT.jar
+
   - name: Create the container
     docker_container:
         image: '{{image}}'
         name: '{{container_name}}'
-        state: started        
+        state: started               
         ports:
          - "8080:9000"
         volumes:
          - "~/workspace:/home/toan/workspace"
-
-  - name : copy file to remote hosts
-    copy:
-      src: ./target/demojenkins-0.0.1-SNAPSHOT.jar
-      dest: /home/toan/workspace/demojenkins-0.0.1-SNAPSHOT.jar
+         
+  - name: Run project in container  
+    shell: 'docker container {{container_name}} start && docker exec {{container_name}} java -jar  demojenkins-0.0.1-SNAPSHOT.jar'
