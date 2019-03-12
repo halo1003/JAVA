@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: 192.168.56.102 ansible_ssh_user=toan  ansible_ssh_pass=Wtq15104
   vars:
     image: openjdk
     container_name: java_container
